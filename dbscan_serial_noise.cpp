@@ -40,7 +40,6 @@ float distance(float x1, float y1, float x2, float y2)
 // }
 
 void noise_detection(float** points, float epsilon, int min_samples, long long int size) {
-    cout << "Step 0" << "\n"; 
     
     //recorremos todos los puntos
     for (long long int i=0; i < size; i++) {
@@ -64,11 +63,10 @@ void noise_detection(float** points, float epsilon, int min_samples, long long i
         // }
 
     }      
-    cout << "Complete" << "\n"; 
 }
 
 void load_CSV(string file_name, float** points, long long int size) {
-    ifstream in(file_name);
+    ifstream in("data/"+file_name);
     if (!in) {
         cerr << "Couldn't read file: " << file_name << "\n";
     }
@@ -88,7 +86,7 @@ void load_CSV(string file_name, float** points, long long int size) {
 //convierte la matriz de points en un archivo csv
 void save_to_CSV(string file_name, float** points, long long int size) {
     fstream fout;
-    fout.open(file_name, ios::out);
+    fout.open("dump/"+file_name, ios::out);
     for (long long int i = 0; i < size; i++) {
         fout << points[i][0] << ","
              << points[i][1] << ","
@@ -100,19 +98,15 @@ int main(int argc, char** argv) {
 
     const float epsilon = 0.03;
     const int min_samples = 10;
-    const long long int size = 20000;
+
+    const long long int size = atoi(argv[1]);
+
     const string input_file_name = to_string(size)+"_data.csv";
-    const string output_file_name = to_string(size)+"_results.csv";    
+    const string output_file_name = to_string(size)+"_serial_results.csv";    
     float** points = new float*[size];
     double start = 0;
     double end = 0;
 
-    int num_puntos = atoi(argv[1]);
-    int num_hilos = atoi(argv[2]);
-    // puntos 20000, 40000, 80000, 120000, 140000, 160000, 180000, 200000
-    // hilos 1, tot/2, tot, 2tot
-
-    omp_set_num_threads(num_hilos);
 
     for(long long int i = 0; i < size; i++) {
         points[i] = new float[3]{0.0, 0.0, 0.0}; 
@@ -135,9 +129,11 @@ int main(int argc, char** argv) {
     // end1 = omp_get_wtime();
     // cout << "Time sin if: " << end1 - start1 << "\n";
 
+    //datos, modo, hilos, tiempo
+    cout << size << ",serial,1," << end - start << "\n";
+
     save_to_CSV(output_file_name, points, size);
 
-    cout << "Time con if: " << end - start << "\n";
 
     for(long long int i = 0; i < size; i++) {
         delete[] points[i];
