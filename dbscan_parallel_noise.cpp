@@ -19,21 +19,21 @@ float distance(float x1, float y1, float x2, float y2)
 void noise_detection(float** points, float epsilon, int min_samples, long long int size, int num_threads) {
     
     long long int i;
+    
 
     omp_set_num_threads(num_threads);
 
     #pragma omp parallel shared(points, epsilon, min_samples, size) private(i)
     {
+        //array of pointers
+        float** vecinos_i = new float*[size]{0};
         #pragma omp for schedule(dynamic)
         for(long long int i=0; i < size; i++) {
-        int vecinos = 0;
-        //array of pointers
-        float** vecinos_i = new float*[size];
-
-        //medimos la distancia de cada punto con todos los demas
+            int vecinos = 0;
+            //medimos la distancia de cada punto con todos los demas
             for (long long int j=0; j < size; j++) {
                 if(j==i) continue;
-                if (distance(points[i][0], points[i][1], points[j][0], points[j][1]) < epsilon) {
+                if (distance(points[i][0], points[i][1], points[j][0], points[j][1]) < epsilon){
                     vecinos_i[vecinos] = &points[j][2];
                     vecinos++;
                 }
@@ -50,10 +50,10 @@ void noise_detection(float** points, float epsilon, int min_samples, long long i
                 
             }
         }
+        //borramos el array de vecinos
+        delete[] vecinos_i;
     }
-    //recorremos todos los puntos
     
-
     //hacemos todos los core de segundo grado de primer grado para graficarlos
     for (long long int i=0; i < size; i++) {
         if(points[i][2] == 2){

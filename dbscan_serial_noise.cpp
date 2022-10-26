@@ -18,11 +18,12 @@ float distance(float x1, float y1, float x2, float y2)
 //size numero de puntos
 void noise_detection(float** points, float epsilon, int min_samples, long long int size) {
     
+    //array of pointers
+    float** vecinos_i = new float*[size]{0};
+    
     //recorremos todos los puntos
     for (long long int i=0; i < size; i++) {
         int vecinos = 0;
-        //array of pointers
-        float** vecinos_i = new float*[size];
 
         //medimos la distancia de cada punto con todos los demas
         for (long long int j=0; j < size; j++) {
@@ -45,12 +46,16 @@ void noise_detection(float** points, float epsilon, int min_samples, long long i
         }
     }
 
+    //borramos el array de vecinos
+    delete[] vecinos_i;
+
     //hacemos todos los core de segundo grado de primer grado para graficarlos
     for (long long int i=0; i < size; i++) {
         if(points[i][2] == 2){
             points[i][2] = 1;
         }
-    }      
+    }
+
 }
 
 void load_CSV(string file_name, float** points, long long int size) {
