@@ -16,34 +16,43 @@ float distance(float x1, float y1, float x2, float y2)
 //epsilon radio de busqueda, umbral de densidad
 //min_samples numero minimo de puntos para formar un cluster
 //size numero de puntos
-void noise_detection(float** points, float epsilon, int min_samples, long long int size) {
+void noise_detection(float** points, float epsilon, int min_samples, long long int size, int num_threads) {
     
-    //recorremos todos los puntos
-    for (long long int i=0; i < size; i++) {
+    long long int i;
+
+    omp_set_num_threads(num_threads);
+
+    #pragma omp parallel shared(points, epsilon, min_samples, size) private(i)
+    {
+        #pragma omp for schedule(dynamic)
+        for(long long int i=0; i < size; i++) {
         int vecinos = 0;
         //array of pointers
         float** vecinos_i = new float*[size];
 
         //medimos la distancia de cada punto con todos los demas
-        for (long long int j=0; j < size; j++) {
-            if(j==i) continue;
-            if (distance(points[i][0], points[i][1], points[j][0], points[j][1]) < epsilon) {
-                vecinos_i[vecinos] = &points[j][2];
-                vecinos++;
-            }
-        }
-        
-        //si cuenta como core hacemos a todos sus vecinos core de segundo grado
-        if(vecinos >= min_samples){
-            for (long long int k=0; k < vecinos; k++){
-                //solo lo hacemos si no es core
-                if(*vecinos_i[k] == 0){
-                    *vecinos_i[k] = 2;
+            for (long long int j=0; j < size; j++) {
+                if(j==i) continue;
+                if (distance(points[i][0], points[i][1], points[j][0], points[j][1]) < epsilon) {
+                    vecinos_i[vecinos] = &points[j][2];
+                    vecinos++;
                 }
             }
             
+            //si cuenta como core hacemos a todos sus vecinos core de segundo grado
+            if(vecinos >= min_samples){
+                for (long long int k=0; k < vecinos; k++){
+                    //solo lo hacemos si no es core
+                    if(*vecinos_i[k] == 0){
+                        *vecinos_i[k] = 2;
+                    }
+                }
+                
+            }
         }
     }
+    //recorremos todos los puntos
+    
 
     //hacemos todos los core de segundo grado de primer grado para graficarlos
     for (long long int i=0; i < size; i++) {
@@ -88,9 +97,10 @@ int main(int argc, char** argv) {
     const int min_samples = 10;
 
     const long long int size = atoi(argv[1]);
+    int num_threads = atoi(argv[2]);
 
     const string input_file_name = to_string(size)+"_data.csv";
-    const string output_file_name = to_string(size)+"_serial_results.csv";    
+    const string output_file_name = to_string(size)+"p_" + to_string(num_threads) + "n_results.csv";    
     float** points = new float*[size];
     double start = 0;
     double end = 0;
@@ -106,11 +116,14 @@ int main(int argc, char** argv) {
     load_CSV(input_file_name, points, size);
         
     start = omp_get_wtime();
-    noise_detection(points, epsilon, min_samples, size); 
+    noise_detection(points, epsilon, min_samples, size, num_threads);
     end = omp_get_wtime();
-    
+
+
     //datos, modo, hilos, tiempo
-    cout << size << ",serial,1," << end - start << "\n";
+    cout << size << ",parallel," << num_threads << "," << end - start << "\n";
+
+    #pragma omp barrier //a veces un hilo empieza la proxima ejecuccion antes que los demas terminen
 
     save_to_CSV(output_file_name, points, size);
 

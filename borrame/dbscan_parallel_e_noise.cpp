@@ -97,7 +97,6 @@ int main(int argc, char** argv) {
     // puntos 20000, 40000, 80000, 120000, 140000, 160000, 180000, 200000
     // hilos 1, tot/2, tot, 2tot
 
-    omp_set_num_threads(num_threads);
 
     for(long long int i = 0; i < size; i++) {
         points[i] = new float[3]{0.0, 0.0, 0.0}; 

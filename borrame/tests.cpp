@@ -4,6 +4,8 @@
 #include <fstream>
 #include <cmath>
 using namespace std;
+#include <vector>
+
 
 float distance(float x1, float y1, float x2, float y2)
 {
@@ -12,7 +14,7 @@ float distance(float x1, float y1, float x2, float y2)
 
 
 void load_CSV(string file_name, float** points, long long int size) {
-    ifstream in(file_name);
+    ifstream in("data/"+file_name);
     if (!in) {
         cerr << "Couldn't read file: " << file_name << "\n";
     }
@@ -43,12 +45,30 @@ int main(int argc, char** argv) {
     load_CSV(input_file_name, points, size);
     
     cout << "Start" << "\n";
+    //vector
+    //vector<float> vecinos_i;
+    //array of pointers
+    // float** vecinos_i = new float*[size];
+    // vector of float pointers
+    vector<float*> vecinos_i;
 
-    for (long long int j = 0; j < 10; j++) {
-        cout << distance(points[0][0], points[0][1], points[0][j], points[0][j]) << "\n";
+    for (int i = 0; i < 1; i++){
+        for (long long int j = 0; j < 10; j++) {
+            	cout << distance(points[i][0], points[i][1], points[j][0], points[j][1]) << "\n";
+                if (distance(points[i][0], points[i][1], points[j][0], points[j][1]) < 0.2) {
+                    //add to vecinos_i pointer to point[j][1]
+                    vecinos_i.push_back(points[j][2]);
+                    //add to array of pointers
+                    // vecinos_i[0] = &points[j][1];
+                }
+        }
     }
-  
+    
+    // *vecinos_i[0] = 69;
 
+    int n = 5;
+    int* pointer  = &n;
+    *pointer = 10; // n = 10
     cout << "Complete" << "\n";
 
      //print points
