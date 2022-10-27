@@ -11,17 +11,10 @@ SET /A n_dobles = %n_dobles%
 :: echo "datos,modo,hilos,tiempo" >> .\dbscan_noise_res.csv
 
 :: serial
-.\Parallel-dbscan\serial_noise.exe %p% >> .\Parallel-dbscan\dbscan_noise_res.csv
+.\Parallel-dbscan\serial_noise.exe %p% >> .\Parallel-dbscan\dbscan_noise_res2.csv
 
 :: parallel puntos 
-.\Parallel-dbscan\dbscan_parallel_e_noise.exe %p% 1 >> .\Parallel-dbscan\dbscan_noise_res.csv
-.\Parallel-dbscan\dbscan_parallel_e_noise.exe %p% %n_medios% >> .\Parallel-dbscan\dbscan_noise_res.csv
-.\Parallel-dbscan\dbscan_parallel_e_noise.exe %p% %n% >> .\Parallel-dbscan\dbscan_noise_res.csv
-.\Parallel-dbscan\dbscan_parallel_e_noise.exe %p% %n_dobles%>> .\Parallel-dbscan\dbscan_noise_res.csv
-
-:: parallel vecinos
-.\Parallel-dbscan\dbscan_parallel_i_noise.exe %p% 1 >> .\Parallel-dbscan\dbscan_noise_res.csv
-.\Parallel-dbscan\dbscan_parallel_i_noise.exe %p% %n_medios%>> .\Parallel-dbscan\dbscan_noise_res.csv
-.\Parallel-dbscan\dbscan_parallel_i_noise.exe %p% %n% >> .\Parallel-dbscan\dbscan_noise_res.csv
-.\Parallel-dbscan\dbscan_parallel_i_noise.exe %p% %n_dobles%>> .\Parallel-dbscan\dbscan_noise_res.csv
-
+.\Parallel-dbscan\dbscan_parallel.exe %p% 1 >> .\Parallel-dbscan\dbscan_noise_res2.csv
+.\Parallel-dbscan\dbscan_parallel.exe %p% %n_medios% >> .\Parallel-dbscan\dbscan_noise_res2.csv
+.\Parallel-dbscan\dbscan_parallel.exe %p% %n% >> .\Parallel-dbscan\dbscan_noise_res2.csv
+.\Parallel-dbscan\dbscan_parallel.exe %p% %n_dobles% >> .\Parallel-dbscan\dbscan_noise_res2.csv
