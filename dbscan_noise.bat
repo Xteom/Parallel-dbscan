@@ -10,7 +10,7 @@ SET /A n_dobles = %n% * 2
 
 ::serial 
 echo "serial"
-.\dbscan_serial_noise.exe 20000 >> .\dbscan_noise_res.csv
+.\dbscan_serial_noise.exe 20000 > .\dbscan_noise_res.csv
 .\dbscan_serial_noise.exe 40000 >> .\dbscan_noise_res.csv
 .\dbscan_serial_noise.exe 80000 >> .\dbscan_noise_res.csv
 .\dbscan_serial_noise.exe 120000 >> .\dbscan_noise_res.csv

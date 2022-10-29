@@ -1,5 +1,5 @@
-10000,serial,1,4.086
-10000,parallel,1,4.158
-10000,parallel,6,0.897
-10000,parallel,12,0.67
-10000,parallel,24,0.67
+20001,serial,1,16.222
+20001,parallel,1,16.178
+20001,parallel,8,2.562
+20001,parallel,16,1.733
+20001,parallel,32,1.707

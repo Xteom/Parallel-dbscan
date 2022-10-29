@@ -36,6 +36,8 @@ void noise_detection(float** points, float epsilon, int min_samples, long long i
         
         //si cuenta como core hacemos a todos sus vecinos core de segundo grado
         if(vecinos >= min_samples){
+            //lo hacemos core
+            points[i][2] = 1;
             for (long long int k=0; k < vecinos; k++){
                 //solo lo hacemos si no es core
                 if(*vecinos_i[k] == 0){

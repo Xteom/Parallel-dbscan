@@ -11,7 +11,7 @@ SET /A n_dobles = %n% * 2
 :: echo "datos,modo,hilos,tiempo" >> .\dbscan_noise_res.csv
 
 :: serial
-.\dbscan_serial_noise.exe %p% >> .\dbscan_noise_res_p.csv
+.\dbscan_serial_noise.exe %p% > .\dbscan_noise_res_p.csv
 
 :: parallel puntos 
 .\dbscan_parallel_noise.exe %p% 1 >> .\dbscan_noise_res_p.csv
